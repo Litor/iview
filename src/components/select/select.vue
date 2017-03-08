@@ -113,6 +113,7 @@
                 query: '',
                 inputLength: 20,
                 notFound: false,
+                queryChangeBySelected: false,
                 slotChangeDuration: false    // if slot change duration and in multiple, set true and after slot change, set false
             };
         },
@@ -472,7 +473,7 @@
                                     this.query = child.label === undefined ? child.searchLabel : child.label;
                                 }
                             });
-                        } else {
+                        } else if(!this.visible){
                             this.query = '';
                         }
                     }
@@ -566,6 +567,10 @@
                 }
             },
             query (val) {
+                if(this.queryChangeBySelected){
+                    this.queryChangeBySelected = false
+                    return
+                }
                 if(this.queryMode == 'local'){
                     this.$broadcast('on-query-change', val);
                     let is_hidden = true;
@@ -608,6 +613,7 @@
                         if (this.filterable) {
                             this.findChild((child) => {
                                 if (child.value === value) {
+                                    this.queryChangeBySelected = true
                                     this.query = child.label === undefined ? child.searchLabel : child.label;
                                 }
                             });
