@@ -10,7 +10,8 @@ let lang = defaultLang;
 let merged = false;
 let i18nHandler = function() {
     const vuei18n = Object.getPrototypeOf(this || Vue).$t;
-    if (typeof vuei18n === 'function') {
+    // TODO 组件库国际化和页面级国际化合并
+    if (typeof vuei18n === 'function' && false) {
         if (!merged) {
             merged = true;
             Vue.locale(
