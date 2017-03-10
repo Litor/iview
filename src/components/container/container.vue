@@ -1,6 +1,6 @@
 <template>
     <div :class="config.class" :style="config.style">
-        <container-layout :layout="config.layout"></container-layout>
+        <container-layout :layout="config.layout" :mock="config.mock"></container-layout>
         <Modal
                 :visible.sync="modal[item.name]"
                 :title="item.title"
