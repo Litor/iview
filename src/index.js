@@ -46,6 +46,7 @@ import container from './components/container/container'
 import { Row, Col } from './components/layout';
 import { Select, Option, OptionGroup } from './components/select';
 import locale from './locale';
+import utils from './components/utils/utils';
 
 const iview = {
     Affix,
@@ -124,6 +125,9 @@ const install = function (Vue, opts = {}) {
     Vue.prototype.$Message = Message;
     Vue.prototype.$Modal = Modal;
     Vue.prototype.$Notice = Notice;
+    Vue.prototype.$getSection = utils.get
+    Vue.prototype.$merge = utils.merge
+    Vue.prototype.$getModals = utils.getModals
 };
 
 // auto install
