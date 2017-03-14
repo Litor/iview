@@ -8,13 +8,30 @@
                         <Icon type="ios-close-empty"></Icon>
                     </slot>
                 </a>
-                <div :class="[prefixCls + '-header']" v-if="showHead" v-el:head><slot name="header"><div :class="[prefixCls + '-header-inner']">{{ title }}</div></slot></div>
-                <div :class="[prefixCls + '-body']"><slot></slot></div>
-                <div :class="[prefixCls + '-footer']" v-if="!footerHide">
-                    <slot name="footer">
-                        <i-button type="text" size="large" @click="cancel">{{ cancelText }}</i-button>
-                        <i-button type="primary" size="large" :loading="buttonLoading" @click="ok">{{ okText }}</i-button>
-                    </slot>
+                <div :class="[prefixCls + '-header']" v-if="showHead" v-el:header>
+                    <div v-if="header">
+                        {{{header}}}
+                    </div>
+                    <div v-if="!header">
+                        <slot name="header">
+                            <div :class="[prefixCls + '-header-inner']">{{ title }}</div>
+                        </slot>
+                    </div>
+                </div>
+                <div :class="[prefixCls + '-body']">
+                    <slot></slot>
+                </div>
+                <div :class="[prefixCls + '-footer']" v-if="!footerHide" v-el:footer>
+                    <div v-if="footer">
+                        {{{footer}}}
+                    </div>
+                    <div v-if="!footer">
+                        <slot name="footer">
+                            <i-button type="text" size="large" @click="cancel">{{ cancelText }}</i-button>
+                            <i-button type="primary" size="large" :loading="buttonLoading" @click="ok">{{ okText }}
+                            </i-button>
+                        </slot>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,13 +40,13 @@
 <script>
     import Icon from '../icon';
     import iButton from '../button/button.vue';
-    import { getScrollBarSize } from '../../utils/assist';
-    import { t } from '../../locale';
+    import {getScrollBarSize} from '../../utils/assist';
+    import {t} from '../../locale';
 
     const prefixCls = 'ivu-modal';
 
     export default {
-        components: { Icon, iButton },
+        components: {Icon, iButton},
         props: {
             visible: {
                 type: Boolean,
@@ -80,7 +97,9 @@
             scrollable: {
                 type: Boolean,
                 default: false
-            }
+            },
+            header: String,
+            footer: String
         },
         data () {
             return {
@@ -189,7 +208,7 @@
 
             let showHead = true;
 
-            if (this.$els.head.innerHTML == `<div class="${prefixCls}-header-inner"></div>` && !this.title) {
+            if (this.$els.header.innerHTML == `<div class="${prefixCls}-header-inner"></div>` && !this.title) {
                 showHead = false;
             }
 
@@ -197,6 +216,12 @@
 
             // ESC close
             document.addEventListener('keydown', this.EscClose);
+            if(this.header){
+                this.$children[0].$compile(this.$els.header)
+            }
+            if(this.footer){
+                this.$children[0].$compile(this.$els.footer)
+            }
         },
         beforeDestroy () {
             document.removeEventListener('keydown', this.EscClose);
