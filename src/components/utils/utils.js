@@ -13,13 +13,18 @@ function __getComponent(comp, name) {
     return res
 }
 
-function get(name) {
+function getInstance(name) {
     return __getComponent(this, name)
 }
 
 function merge(layout, config) {
-    __mergeRows(layout.rows, config.options, config.events)
-    __mergeModals(layout.modals, config.options, config.events)
+    if(layout.rows){
+        __mergeRows(layout.rows, config.options, config.events)
+    }
+
+    if (layout.modals) {
+        __mergeModals(layout.modals, config.options, config.events)
+    }
 
     return layout
 }
@@ -28,13 +33,13 @@ function __mergeModals(modals, options, events) {
     modals.forEach(function (modal) {
         if (modal.name && options[modal.name]) {
             modal.options = options[modal.name]
-        }else{
+        } else {
             modal.options = {}
         }
 
         if (modal.name && events[modal.name]) {
             modal.events = events[modal.name]
-        }else{
+        } else {
             modal.events = {}
         }
     })
@@ -48,13 +53,13 @@ function __mergeRows(row, options, events) {
 
             if (col.name && options[col.name]) {
                 col.options = options[col.name]
-            }else{
+            } else {
                 col.options = {}
             }
 
             if (col.name && events[col.name]) {
                 col.events = events[col.name]
-            }else{
+            } else {
                 col.events = {}
             }
         })
@@ -62,8 +67,45 @@ function __mergeRows(row, options, events) {
 }
 
 function getModals() {
- return this.$children[0].modal
+    return this.$children[0].modal
+}
+
+function getSection(name) {
+    var config = this.$children[0].config
+    var res = __getRowsSection(config.rows, name)
+
+    if (!res) {
+        config.modals.forEach(function (modal) {
+            if (modal.name == name) {
+                res = modal
+            }
+        })
+    }
+
+    return res
+}
+
+function __getRowsSection(rows, name) {
+    var res = null
+
+    rows.forEach(function (row) {
+        if (res || !row.cols) {
+            return
+        }
+
+        row.cols.forEach(function (col) {
+            if (col.name == name) {
+                res = col
+            }
+
+            if (col.rows) {
+                res = __getRowsSection(col.rows, name)
+            }
+        })
+    })
+
+    return res
 }
 
 
-export default {get, merge, getModals}
+export default {getInstance, merge, getModals, getSection}

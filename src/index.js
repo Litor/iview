@@ -125,7 +125,8 @@ const install = function (Vue, opts = {}) {
     Vue.prototype.$Message = Message;
     Vue.prototype.$Modal = Modal;
     Vue.prototype.$Notice = Notice;
-    Vue.prototype.$getSection = utils.get
+    Vue.prototype.$getSection = utils.getSection
+    Vue.prototype.$getInstance = utils.getInstance
     Vue.prototype.$merge = utils.merge
     Vue.prototype.$getModals = utils.getModals
 };

@@ -99,10 +99,11 @@
             },
             form() {
                 let parent = this.$parent;
-                while (parent.$options.name !== 'iForm') {
+
+                while (parent && parent.$options.name !== 'iForm') {
                     parent = parent.$parent;
                 }
-                return parent;
+                return parent || {};
             },
             fieldValue: {
                 cache: false,
