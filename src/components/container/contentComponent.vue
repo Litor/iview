@@ -5,7 +5,7 @@
 </template>
 <script>
     export default {
-        props:{events:Object, options:Object, mock:Boolean, content:String},
+        props:{events:Object, options:Object, mock:Boolean, content:[String, Number, Boolean]},
         created(){
             var events = _.keys(this.events)
 
