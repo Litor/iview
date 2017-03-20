@@ -1,31 +1,37 @@
 <template>
-    <div :class="config.class" :style="config.style">
-        <container-layout :rows="config.rows" :mock="config.mock"></container-layout>
-        <div v-for="item in config.modals">
-            <Modal
-                    :visible.sync="modal[item.name]"
-                    :title="item.options.$title"
-                    :header="item.options.$header"
-                    :footer="item.options.$footer"
-                    :loading="item.options.$loading"
-                    :closable="item.options.$closable"
-                    :width="item.options.$width"
-                    :ok-text="item.options.$okText"
-                    :cancel-text="item.options.$cancelText"
-                    :scrollable="item.options.$scrollable"
-                    :class-name="item.options.$className"
-                    :style="item.options.$style"
-                    :mask-closable="item.options.$maskClosable"
-                    @on-ok="__modalOk(item.events && item.events['$on-ok'], item.name)"
-                    @on-cancel="__modalCancel(item.events && item.events['$on-cancel'], item.name)"
-                    v-if="modal[item.name]">
-                <component :is="item.component" :options="item.options" :events="item.events"
-                           class="{{item.name?('comp-name-'+item.name):''}}" v-if="modal[item.name]"></component>
-            </Modal>
+    <div>
+        <div :class="config.class" :style="config.style" v-if="!config.designer">
+            <container-layout :rows="config.rows" :mock="config.mock"></container-layout>
+            <div v-for="item in config.modals">
+                <Modal
+                        :visible.sync="modal[item.name]"
+                        :title="item.options.$title"
+                        :header="item.options.$header"
+                        :footer="item.options.$footer"
+                        :loading="item.options.$loading"
+                        :closable="item.options.$closable"
+                        :width="item.options.$width"
+                        :ok-text="item.options.$okText"
+                        :cancel-text="item.options.$cancelText"
+                        :scrollable="item.options.$scrollable"
+                        :class-name="item.options.$className"
+                        :style="item.options.$style"
+                        :mask-closable="item.options.$maskClosable"
+                        @on-ok="__modalOk(item.events && item.events['$on-ok'], item.name)"
+                        @on-cancel="__modalCancel(item.events && item.events['$on-cancel'], item.name)"
+                        v-if="modal[item.name]">
+                    <component :is="item.component" :options="item.options" :events="item.events"
+                               class="{{item.name?('comp-name-'+item.name):''}}" v-if="modal[item.name]"></component>
+                </Modal>
+            </div>
+        </div>
+        <div v-if="config.designer">
+            <designer :layout-config="config"></designer>
         </div>
     </div>
 </template>
 <script>
+    import designer from '../designer/designer.vue'
     import Row from '../layout/row.vue'
     import iCol from '../layout/col.vue'
     import Modal from '../modal/modal.vue'
@@ -33,7 +39,7 @@
 
     export default {
         props: {config: Object},
-        components: {Row, iCol, Modal, containerLayout},
+        components: {Row, iCol, Modal, containerLayout, designer},
 
         data: function () {
             return {

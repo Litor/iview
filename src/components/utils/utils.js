@@ -107,5 +107,38 @@ function __getRowsSection(rows, name) {
     return res
 }
 
+function removeOptionsAndEvents(config) {
+    __removeRowsOptionsAndEvents(config.rows)
+    __removeModalsOptionsAndEvents(config.modals)
+}
 
-export default {getInstance, merge, getModals, getSection}
+function __removeRowsOptionsAndEvents(rows) {
+    rows.forEach(function (row) {
+        row.cols.forEach(function (col) {
+            if(col.options){
+                delete col.options
+            }
+            if(col.events){
+                delete col.events
+            }
+
+            if (col.rows) {
+                res = __removeRowsOptionsAndEvents(col.rows)
+            }
+        })
+    })
+}
+
+function __removeModalsOptionsAndEvents(modals) {
+    modals.forEach(function (modal) {
+        if(modal.options){
+            delete modal.options
+        }
+        if(modal.events){
+            delete modal.events
+        }
+    })
+}
+
+
+export default {getInstance, merge, getModals, getSection, removeOptionsAndEvents}
