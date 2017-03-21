@@ -67,11 +67,12 @@ function __mergeRows(row, options, events) {
 }
 
 function getModals() {
-    return this.$children[0].modal
+    return __findContainer(this).modal
 }
 
 function getSection(name) {
-    var config = this.$children[0].config
+    var container = __findContainer(this)
+    var config = container.config
     var res = __getRowsSection(config.rows, name)
 
     if (!res) {
@@ -84,6 +85,27 @@ function getSection(name) {
 
     return res
 }
+
+function __findContainer(comp) {
+    var res = null
+    var children = comp.$children
+
+    if(children){
+        children.forEach(function (child) {
+            if(res){
+                return
+            }
+            if(child.$options && child.$options.$name == '$iContainer'){
+                res = child
+            }else{
+                res = __findContainer(child)
+            }
+        })
+    }
+
+    return res
+}
+
 
 function __getRowsSection(rows, name) {
     var res = null

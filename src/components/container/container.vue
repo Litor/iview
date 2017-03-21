@@ -39,6 +39,7 @@
 
     export default {
         props: {config: Object},
+        $name:'$iContainer', // 用于页面中查找container组件
         components: {Row, iCol, Modal, containerLayout, designer},
 
         data: function () {
