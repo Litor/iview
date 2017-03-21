@@ -500,6 +500,7 @@
                 if (!this.multiple && this.filterable && this.model) {
                     this.findChild((child) => {
                         if (this.model === child.value) {
+                            this.queryChangeBySelected = true
                             if (child.label) {
                                 this.query = child.label;
                             } else if (child.searchLabel) {
