@@ -9,29 +9,29 @@
                     </slot>
                 </a>
                 <div :class="[prefixCls + '-header']" v-if="showHead" v-el:header>
-                    <div v-if="header">
+                    <template v-if="header">
                         {{{header}}}
-                    </div>
-                    <div v-if="!header">
+                    </template>
+                    <template v-if="!header">
                         <slot name="header">
                             <div :class="[prefixCls + '-header-inner']">{{ title }}</div>
                         </slot>
-                    </div>
+                    </template>
                 </div>
                 <div :class="[prefixCls + '-body']">
                     <slot></slot>
                 </div>
                 <div :class="[prefixCls + '-footer']" v-if="!footerHide" v-el:footer>
-                    <div v-if="footer">
+                    <template v-if="footer">
                         {{{footer}}}
-                    </div>
-                    <div v-if="!footer">
+                    </template>
+                    <template v-if="!footer">
                         <slot name="footer">
                             <i-button type="text" size="large" @click="cancel">{{ cancelText }}</i-button>
                             <i-button type="primary" size="large" :loading="buttonLoading" @click="ok">{{ okText }}
                             </i-button>
                         </slot>
-                    </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -208,7 +208,7 @@
 
             let showHead = true;
 
-            if (this.$els.header.innerHTML == `<div class="${prefixCls}-header-inner"></div>` && !this.title) {
+            if (this.$els.header.innerHTML.replace(/(^\s*)|(\s*$)/g, "") == `<div class="${prefixCls}-header-inner"></div>` && !this.title) {
                 showHead = false;
             }
 
