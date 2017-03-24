@@ -5,7 +5,7 @@
             <Checkbox :checked="checked" @on-change="toggleSelect" :disabled="disabled"></Checkbox>
         </template>
         <template v-if="renderType === 'singleSelection'">
-            <Radio :checked.sync="checked" @click="singleSelect"></Radio>
+            <Radio :checked.sync="checked" @click="singleSelect" :disabled="disabled"></Radio>
         </template>
         <template v-if="renderType === 'normal'">{{{ row[column.key] }}}</template>
     </div>
