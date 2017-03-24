@@ -390,6 +390,17 @@
                 }
                 this.$emit('on-selection-change', selection);
             },
+
+            singleSelect(_index){
+                for (let i in this.objData) {
+                    if (parseInt(i) === _index) {
+                        this.objData[i]._isChecked = true
+                    }else{
+                        this.objData[i]._isChecked = false
+                    }
+                }
+                this.$emit('on-select', JSON.parse(JSON.stringify(this.data[_index])));
+            },
             selectAll (status) {
                 // this.rebuildData.forEach((data) => {
                 //     if(this.objData[data._index]._isDisabled){
@@ -397,7 +408,7 @@
                 //     }else{
                 //         this.objData[data._index]._isChecked = status;
                 //     }
-                    
+
                 // });
                 for(const data of this.rebuildData){
                     if(this.objData[data._index]._isDisabled){

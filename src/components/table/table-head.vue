@@ -8,6 +8,7 @@
                 <th v-for="(index, column) in columns" :class="alignCls(column)">
                     <div :class="cellClasses(column)">
                         <template v-if="column.type === 'selection'"><Checkbox :checked="isSelectAll" @on-change="selectAll"></Checkbox></template>
+                        <template v-if="column.type === 'singleSelection'"></template>
                         <template v-else>
                             {{{ renderHeader(column, $index) }}}
                             <span :class="[prefixCls + '-sort']" v-if="column.sortable">

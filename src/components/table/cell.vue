@@ -4,6 +4,9 @@
         <template v-if="renderType === 'selection'">
             <Checkbox :checked="checked" @on-change="toggleSelect" :disabled="disabled"></Checkbox>
         </template>
+        <template v-if="renderType === 'singleSelection'">
+            <Radio :checked.sync="checked" @click="singleSelect"></Radio>
+        </template>
         <template v-if="renderType === 'normal'">{{{ row[column.key] }}}</template>
     </div>
 </template>
@@ -71,6 +74,10 @@
             },
             toggleSelect () {
                 this.$parent.$parent.toggleSelect(this.index);
+            },
+
+            singleSelect(){
+                this.$parent.$parent.singleSelect(this.index);
             }
         },
         compiled () {
@@ -80,7 +87,9 @@
                 this.renderType = 'selection';
             } else if (this.column.render) {
                 this.renderType = 'render';
-            } else {
+            } else if(this.column.type === 'singleSelection'){
+                this.renderType = 'singleSelection'
+            }else {
                 this.renderType = 'normal';
             }
         },
