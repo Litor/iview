@@ -1,3 +1,4 @@
+import {deepCopy} from '../../utils/assist'
 function __getComponent(comp, name) {
     var res = null
     _.each(comp.$children, (item) => {
@@ -18,6 +19,7 @@ function getInstance(name) {
 }
 
 function merge(layout, config) {
+    layout = deepCopy(layout)
     if(layout.rows){
         __mergeRows(layout.rows, config.options, config.events)
     }
