@@ -6,7 +6,7 @@
         <div :class="[prefixCls + '-popper']" transition="fade" v-el:popper v-show="!disabled && (visible || always)">
             <div :class="[prefixCls + '-content']">
                 <div :class="[prefixCls + '-arrow']"></div>
-                <div :class="[prefixCls + '-inner']"><slot name="content">{{ content }}</slot></div>
+                <div :class="[prefixCls + '-inner']"><slot name="content">{{{ content }}}</slot></div>
             </div>
         </div>
     </div>
