@@ -16,7 +16,7 @@
                         :scrollable="item.options.$scrollable"
                         :class-name="item.options.$className"
                         :style="item.options.$style"
-                        :mask-closable="item.options.$maskClosable"
+                        :mask-closable="item.options.$maskClosable === true"
                         @on-ok="__modalOk(item.events && item.events['$on-ok'], item.name)"
                         @on-cancel="__modalCancel(item.events && item.events['$on-cancel'], item.name)"
                         v-if="modal[item.name]">
