@@ -3,7 +3,7 @@
         <template v-for="row in rows">
             <Row :class="row.class" :style="row.style" v-if="!row.hidden">
                 <template v-for="col in row.cols">
-                    <i-col :span="col.span"  :class="col.class" :style="col.style" v-if="!col.hidden">
+                    <i-col :span="col.span"  :class="col.class" :style="col.style" v-if="!(col.hidden || (col.options && col.options._hidden))">
                         <div v-if="col.content">
                             <content-component  :options="col.options || {}" :events="col.events || {}"
                                                 class="{{col.name?('comp-name-'+col.name):''}}" :mock="mock" :content="col.content"></content-component>
@@ -27,6 +27,6 @@
     export default {
         components:{contentComponent},
         props: {rows: Array, mock: {type: Boolean, default: false}},
-        name: 'containerLayout'
+        name: 'containerLayout',
     }
 </script>
