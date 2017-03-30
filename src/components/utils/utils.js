@@ -20,15 +20,47 @@ function getInstance(name) {
 
 function merge(layout, config) {
     layout = deepCopy(layout)
-    if(layout.rows){
+
+    layout.$modals = {}
+
+    this.$page = {
+        options: config.options,
+        events: config.events,
+        modals:layout.$modals
+    };
+
+    if (layout.rows) {
         __mergeRows(layout.rows, config.options, config.events)
     }
 
+    if(config.events && config.events.$root){
+        _bindPageEvents(this, config.events.$root)
+    }
+
     if (layout.modals) {
+        for(var i = 0; i < layout.modals.length; i++){
+            layout.$modals[layout.modals[i].name] = false
+        }
         __mergeModals(layout.modals, config.options, config.events)
     }
 
     return layout
+}
+
+function _bindPageEvents(vm, events) {
+    var eventsNameList = Object.keys(events)
+
+    if(!events['on-activate']){
+        events['on-activate'] = function (next) {
+            next()
+        }
+    }
+
+    eventsNameList.forEach(function (item) {
+        vm.$on(item, events[item])
+    })
+
+
 }
 
 function __mergeModals(modals, options, events) {
@@ -54,9 +86,13 @@ function __mergeRows(row, options, events) {
             }
 
             if (col.name && options[col.name]) {
+                // _hidden 如果没有设置 默认显示
+                if(options[col.name]._hidden === undefined){
+                    options[col.name]._hidden = false
+                }
                 col.options = options[col.name]
             } else {
-                col.options = {}
+                col.options = {_hidden:false}
             }
 
             if (col.name && events[col.name]) {
@@ -69,7 +105,7 @@ function __mergeRows(row, options, events) {
 }
 
 function getModals() {
-    return __findContainer(this).modal
+    return __findContainer(this).config.$modals
 }
 
 function getSection(name) {
@@ -92,14 +128,14 @@ function __findContainer(comp) {
     var res = null
     var children = comp.$children
 
-    if(children){
+    if (children) {
         children.forEach(function (child) {
-            if(res){
+            if (res) {
                 return
             }
-            if(child.$options && child.$options.$name == '$iContainer'){
+            if (child.$options && child.$options.$name == '$iContainer') {
                 res = child
-            }else{
+            } else {
                 res = __findContainer(child)
             }
         })
@@ -139,10 +175,10 @@ function removeOptionsAndEvents(config) {
 function __removeRowsOptionsAndEvents(rows) {
     rows.forEach(function (row) {
         row.cols.forEach(function (col) {
-            if(col.options){
+            if (col.options) {
                 delete col.options
             }
-            if(col.events){
+            if (col.events) {
                 delete col.events
             }
 
@@ -155,10 +191,10 @@ function __removeRowsOptionsAndEvents(rows) {
 
 function __removeModalsOptionsAndEvents(modals) {
     modals.forEach(function (modal) {
-        if(modal.options){
+        if (modal.options) {
             delete modal.options
         }
-        if(modal.events){
+        if (modal.events) {
             delete modal.events
         }
     })

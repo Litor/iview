@@ -4,7 +4,7 @@
             <container-layout :rows="config.rows" :mock="config.mock"></container-layout>
             <div v-for="item in config.modals">
                 <Modal
-                        :visible.sync="modal[item.name]"
+                        :visible.sync="config.$modals[item.name]"
                         :title="item.options.$title"
                         :header="item.options.$header"
                         :footer="item.options.$footer"
@@ -19,9 +19,9 @@
                         :mask-closable="item.options.$maskClosable === true"
                         @on-ok="__modalOk(item.events && item.events['$on-ok'], item.name)"
                         @on-cancel="__modalCancel(item.events && item.events['$on-cancel'], item.name)"
-                        v-if="modal[item.name]">
+                        v-if="config.$modals[item.name]">
                     <component :is="item.component" :options="item.options" :events="item.events"
-                               class="{{item.name?('comp-name-'+item.name):''}}" v-if="modal[item.name]"></component>
+                               class="{{item.name?('comp-name-'+item.name):''}}" v-if="config.$modals[item.name]"></component>
                 </Modal>
             </div>
         </div>
@@ -42,18 +42,12 @@
         $name:'$iContainer', // 用于页面中查找container组件
         components: {Row, iCol, Modal, containerLayout, designer},
 
-        data: function () {
-            return {
-                modal: {}
-            }
-        },
-
         methods: {
             __modalOk(callback, modalName){
                 if (callback) {
                     callback()
                 } else {
-                    this.modal[modalName] = false
+                    this.config.$modals[modalName] = false
                 }
             },
 
@@ -61,7 +55,7 @@
                 if (callback) {
                     callback()
                 } else {
-                    this.modal[modalName] = false
+                    this.config.$modals[modalName] = false
                 }
             },
             __getComponent(comp, name){
@@ -82,12 +76,6 @@
             get(name){
                 return this.__getComponent(this, name)
             }
-        },
-
-        created(){
-            _.each(this.config.modals, (modal) => {
-                this.$set('modal.' + modal.name, false)
-            })
         }
     }
 </script>
