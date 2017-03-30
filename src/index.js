@@ -43,8 +43,8 @@ import Transfer from './components/transfer';
 import Tree from './components/tree';
 import Upload from './components/upload';
 import container from './components/container/container'
-import { Row, Col } from './components/layout';
-import { Select, Option, OptionGroup } from './components/select';
+import {Row, Col} from './components/layout';
+import {Select, Option, OptionGroup} from './components/select';
 import locale from './locale';
 import utils from './components/utils/utils';
 
