@@ -4,7 +4,7 @@ const prefixCls = 'ivu-message';
 const iconPrefixCls = 'ivu-icon';
 const prefixKey = 'ivu_message_key_';
 
-let defaultDuration = 1.5;
+let defaultDuration = 5;
 let top;
 let messageInstance;
 let key = 1;
