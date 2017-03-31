@@ -243,7 +243,7 @@
                      }*/
                 }
 
-                if (this.model) {
+                if (this.model !== undefined && this.model !== "") {
                     this.toggleSingleSelected(this.model, init, slot);
                 }
             },
