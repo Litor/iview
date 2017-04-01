@@ -5,7 +5,7 @@
         </colgroup>
         <thead>
             <tr>
-                <th v-for="(index, column) in columns" :class="alignCls(column)">
+                <th v-for="(index, column) in columns" :class="alignCls(column)" :style="{height:this.headerHeight}">
                     <div :class="cellClasses(column)">
                         <template v-if="column.type === 'selection' || column.type === 'singleSelection'">
                             <Checkbox :checked="isSelectAll" @on-change="selectAll" v-if="column.type === 'selection'"></Checkbox>
@@ -69,6 +69,7 @@
             prefixCls: String,
             style: Object,
             columns: Array,
+            headerHeight:String,
             objData: Object,
             data: Array,    // rebuildData
             columnsWidth: Object,

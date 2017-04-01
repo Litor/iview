@@ -6,10 +6,11 @@
                 <table-head
                     :prefix-cls="prefixCls"
                     :style="tableStyle"
-                    :columns="cloneColumns"
+                    :columns="centerColumns"
                     :obj-data="objData"
                     :columns-width="columnsWidth"
-                    :data="rebuildData"></table-head>
+                    :data="rebuildData"
+                    :header-height="headerHeight"></table-head>
             </div>
             <div :class="[prefixCls + '-body']" :style="bodyStyle" v-el:body @scroll="handleBodyScroll"
                 v-show="!((!!noDataText && (!data || data.length === 0)) || (!!noFilteredDataText && (!rebuildData || rebuildData.length === 0)))">
@@ -17,7 +18,7 @@
                     v-ref:tbody
                     :prefix-cls="prefixCls"
                     :style="tableStyle"
-                    :columns="cloneColumns"
+                    :columns="centerColumns"
                     :data="rebuildData"
                     :columns-width="columnsWidth"
                     :obj-data="objData"></table-body>
@@ -44,7 +45,8 @@
                         :columns="leftFixedColumns"
                         :obj-data="objData"
                         :columns-width.sync="columnsWidth"
-                        :data="rebuildData"></table-head>
+                        :data="rebuildData"
+                        :header-height="headerHeight"></table-head>
                 </div>
                 <div :class="[prefixCls + '-fixed-body']" :style="fixedBodyStyle" v-el:fixed-body>
                     <table-body
@@ -66,7 +68,8 @@
                         :columns="rightFixedColumns"
                         :obj-data="objData"
                         :columns-width.sync="columnsWidth"
-                        :data="rebuildData"></table-head>
+                        :data="rebuildData"
+                        :header-height="headerHeight"></table-head>
                 </div>
                 <div :class="[prefixCls + '-fixed-body']" :style="fixedBodyStyle" v-el:fixed-right-body>
                     <table-body
@@ -118,6 +121,9 @@
             height: {
                 type: [Number, String]
             },
+            headerHeight:{
+                type: [Number, String]
+            },
             stripe: {
                 type: Boolean,
                 default: false
@@ -165,11 +171,18 @@
                 compiledUids: [],
                 objData: this.makeObjData(),     // checkbox or highlight-row
                 rebuildData: [],    // for sort or filter
-                cloneColumns: this.makeColumns(),
+                cloneColumns: [],
                 showSlotHeader: true,
                 showSlotFooter: true,
                 bodyHeight: 0,
                 bodyRealHeight: 0,
+                paddingLeft:0,
+                paddingRight:0,
+                centerColumns:[],
+                leftFixedColumns:[],
+                rightFixedColumns :[],
+                isLeftFixed:false,
+                isRightFixed :false,
                 scrollBarWidth: getScrollBarSize()
             };
         },
@@ -220,6 +233,9 @@
 //                    const width = this.bodyHeight === 0 ? this.tableWidth : this.tableWidth - this.scrollBarWidth;
                     style.width = `${width}px`;
                 }
+                style.paddingLeft = this.paddingLeft+'px'
+                style.paddingRight = this.paddingRight+'px'
+
                 return style;
             },
             fixedTableStyle () {
@@ -263,38 +279,92 @@
                 }
                 return style;
             },
-            leftFixedColumns () {
+            /*leftFixedColumns () {
                 let left = [];
                 let other = [];
+                let paddingLeft = 0
                 this.cloneColumns.forEach((col) => {
                     if (col.fixed && col.fixed === 'left') {
                         left.push(col);
+                        paddingLeft += col.width
                     } else {
                         other.push(col);
                     }
                 });
-                return left.concat(other);
+
+                console.log(paddingLeft)
+
+                this.paddingLeft = paddingLeft
+
+                return left //.concat(other);
+            },
+            centerColumns () {
+                let center = [];
+                this.cloneColumns.forEach((col) => {
+                    if (!col.fixed) {
+                        center.push(col);
+                    }
+                });
+                return center
             },
             rightFixedColumns () {
                 let right = [];
                 let other = [];
+                let paddingRight = 0;
+
                 this.cloneColumns.forEach((col) => {
                     if (col.fixed && col.fixed === 'right') {
+                        paddingRight += col.width
                         right.push(col);
                     } else {
                         other.push(col);
                     }
                 });
-                return right.concat(other);
+
+                this.paddingRight = paddingRight
+
+                return right //.concat(other);
             },
             isLeftFixed () {
                 return this.columns.some(col => col.fixed && col.fixed === 'left');
             },
             isRightFixed () {
                 return this.columns.some(col => col.fixed && col.fixed === 'right');
-            }
+            }*/
         },
         methods: {
+            resetPrivateVariables(){
+                let left = []
+                let right = []
+                let center = []
+                let paddingRight = 0
+                let paddingLeft = 0
+                let isLeftFixed = false
+                let isRightFixed = false
+
+                this.cloneColumns.forEach((col) => {
+                    if (col.fixed === 'left') {
+                        left.push(col);
+                        isLeftFixed = true
+                        paddingLeft += col.width
+                    } else if(col.fixed === 'right'){
+                        right.push(col);
+                        isRightFixed = true
+                        paddingRight += col.width
+                    }else{
+                        center.push(col)
+                    }
+                });
+
+                this.centerColumns = center
+                this.leftFixedColumns = left
+                this.rightFixedColumns = right
+                this.paddingRight = paddingRight
+                this.paddingLeft = paddingLeft
+                this.isLeftFixed = isLeftFixed
+                this.isRightFixed = isRightFixed
+
+            },
             rowClsName (index) {
                 return this.rowClassName(this.data[index], index);
             },
@@ -661,6 +731,8 @@
             this.fixedHeader();
             this.$nextTick(() => this.ready = true);
             window.addEventListener('resize', this.handleResize, false);
+            this.cloneColumns = this.makeColumns()
+            this.resetPrivateVariables()
         },
         beforeDestroy () {
             window.removeEventListener('resize', this.handleResize, false);
@@ -680,6 +752,7 @@
                     this.cloneColumns = this.makeColumns();
                     this.rebuildData = this.makeDataWithSortAndFilter();
                     this.handleResize();
+                    this.resetPrivateVariables()
                 },
                 deep: true
             },

@@ -4,26 +4,33 @@
             <col v-for="column in columns" :width="setCellWidth(column, $index, false)">
         </colgroup>
         <tbody :class="[prefixCls + '-tbody']">
-            <tr
+        <tr
                 v-for="(index, row) in data"
                 :class="rowClasses(row._index)"
                 @mouseenter.stop="handleMouseIn(row._index)"
                 @mouseleave.stop="handleMouseOut(row._index)"
                 @click.stop="clickCurrentRow(row._index)"
                 @dblclick.stop="dblclickCurrentRow(row._index)">
-                <td v-for="column in columns" :class="alignCls(column, row)">
-                    <Cell
-                        :fixed="fixed"
-                        :prefix-cls="prefixCls"
-                        :row="row"
-                        :column="column"
-                        :natural-index="index"
-                        :index="row._index"
-                        :checked="rowChecked(row._index)"
-                        :disabled="rowDisabled(row._index)"
-                        ></Cell>
-                </td>
-            </tr>
+            <td v-for="column in columns" :class="alignCls(column, row)">
+                <div :class="classes(column)">
+                    <template v-if="renderType(column) === 'index'">{{index + 1}}</template>
+                    <template v-if="renderType(column) === 'selection'">
+                        <Checkbox :checked="objData[row._index] && objData[row._index]._isChecked" @on-change="toggleSelect(index)"
+                                  :disabled="rowDisabled(row._index)"></Checkbox>
+                    </template>
+                    <template v-if="renderType(column) === 'singleSelection'">
+                        <Radio :checked="objData[row._index] && objData[row._index]._isChecked" @click="singleSelect(row._index)"
+                               :disabled="rowDisabled(row._index)"></Radio>
+                    </template>
+                    <template v-if="renderType(column) === 'normal'">
+                        {{{ row[column.key] }}}
+                    </template>
+                    <template v-if="renderType(column) === 'render'">
+                        {{{column.render(row, column, row._index)}}}
+                    </template>
+                </div>
+            </td>
+        </tr>
         </tbody>
     </table>
 </template>
@@ -32,8 +39,8 @@
     import Mixin from './mixin';
 
     export default {
-        mixins: [ Mixin ],
-        components: { Cell },
+        mixins: [Mixin],
+        components: {Cell},
         props: {
             prefixCls: String,
             style: Object,
@@ -46,6 +53,28 @@
                 default: false
             }
         },
+
+        ready(){
+            this.$parent.content.$compile(this.$el);
+        },
+
+        watch: {
+            columns: {
+                handler: function () {
+                    console.log('column change')
+                    this.$parent.content.$compile(this.$el);
+                },
+                deep: true
+            },
+            data: {
+                handler: function () {
+                    console.log('data change')
+                    this.$parent.content.$compile(this.$el);
+                },
+                deep: true
+            }
+        },
+
         methods: {
             rowClasses (_index) {
                 return [
@@ -77,6 +106,42 @@
             },
             dblclickCurrentRow (_index) {
                 this.$parent.dblclickCurrentRow(_index);
+            },
+
+            // from cell.vue
+            renderType(column){
+                var renderType = ''
+                if (column.type === 'index') {
+                    renderType = 'index';
+                } else if (column.type === 'selection') {
+                    renderType = 'selection';
+                } else if (column.render) {
+                    renderType = 'render';
+                } else if (column.type === 'singleSelection') {
+                    renderType = 'singleSelection'
+                } else {
+                    renderType = 'normal';
+                }
+
+                return renderType
+            },
+
+            toggleSelect (index) {
+                this.$parent.toggleSelect(index);
+            },
+
+            singleSelect(index){
+                this.$parent.singleSelect(index);
+            },
+
+            classes (column) {
+                return [
+                    `${this.prefixCls}-cell`,
+                    {
+                        [`${this.prefixCls}-hidden`]: !this.fixed && column.fixed && (column.fixed === 'left' || column.fixed === 'right'),
+                        [`${this.prefixCls}-cell-ellipsis`]: column.ellipsis || false
+                    }
+                ];
             }
         }
     };
