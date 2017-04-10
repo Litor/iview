@@ -462,6 +462,10 @@
             },
 
             singleSelect(_index){
+                if(this.objData[_index]._isDisabled){
+                    return
+                }
+
                 for (let i in this.objData) {
                     if (parseInt(i) === _index) {
                         this.objData[i]._isChecked = true
