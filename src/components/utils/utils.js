@@ -154,6 +154,9 @@ function __getRowsSection(rows, name) {
         }
 
         row.cols.forEach(function (col) {
+            if(res){
+                return
+            }
             if (col.name == name) {
                 res = col
             }
