@@ -248,6 +248,7 @@
                 }
             },
             clearSingleSelect () {
+                this.queryChangeBySelected = false
                 if (this.showCloseIcon) {
                     this.findChild((child) => {
                         child.selected = false;
@@ -480,6 +481,7 @@
                 }, 300);
             },
             resetInputState () {
+                this.queryChangeBySelected = false
                 this.inputLength = this.$els.input.value.length * 12 + 20;
             },
             handleInputDelete () {
@@ -569,7 +571,6 @@
             },
             query (val) {
                 if(this.queryChangeBySelected){
-                    this.queryChangeBySelected = false
                     return
                 }
                 if(this.queryMode == 'local'){
@@ -610,11 +611,11 @@
                         }
                     } else {
                         this.model = value;
+                        this.queryChangeBySelected = true
 
                         if (this.filterable) {
                             this.findChild((child) => {
                                 if (child.value === value) {
-                                    this.queryChangeBySelected = true
                                     this.query = child.label === undefined ? child.searchLabel : child.label;
                                 }
                             });
