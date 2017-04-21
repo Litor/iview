@@ -21,24 +21,30 @@ function getInstance(name) {
 function merge(layout, config) {
     layout = deepCopy(layout)
 
+    config.events = config.events ? config.events : {}
+
     layout.$modals = {}
 
     this.$page = {
         options: config.options,
         events: config.events,
-        modals:layout.$modals
+        modals: layout.$modals
     };
 
     if (layout.rows) {
         __mergeRows(layout.rows, config.options, config.events)
     }
 
-    if(config.events && config.events.$root){
+    if (!config.events.$root) {
+        config.events.$root = {}
+    }
+
+    if (config.events && config.events.$root) {
         _bindPageEvents(this, config.events.$root)
     }
 
     if (layout.modals) {
-        for(var i = 0; i < layout.modals.length; i++){
+        for (var i = 0; i < layout.modals.length; i++) {
             layout.$modals[layout.modals[i].name] = false
         }
         __mergeModals(layout.modals, config.options, config.events)
@@ -48,13 +54,13 @@ function merge(layout, config) {
 }
 
 function _bindPageEvents(vm, events) {
-    var eventsNameList = Object.keys(events)
-
-    if(!events['on-activate']){
+    if (!events['on-activate']) {
         events['on-activate'] = function (next) {
             next()
         }
     }
+
+    var eventsNameList = Object.keys(events)
 
     eventsNameList.forEach(function (item) {
         vm.$on(item, events[item])
@@ -87,12 +93,12 @@ function __mergeRows(row, options, events) {
 
             if (col.name && options[col.name]) {
                 // _hidden 如果没有设置 默认显示
-                if(options[col.name]._hidden === undefined){
+                if (options[col.name]._hidden === undefined) {
                     options[col.name]._hidden = false
                 }
                 col.options = options[col.name]
             } else {
-                col.options = {_hidden:false}
+                col.options = {_hidden: false}
             }
 
             if (col.name && events[col.name]) {
@@ -154,7 +160,7 @@ function __getRowsSection(rows, name) {
         }
 
         row.cols.forEach(function (col) {
-            if(res){
+            if (res) {
                 return
             }
             if (col.name == name) {
