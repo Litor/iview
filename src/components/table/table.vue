@@ -371,7 +371,7 @@
             handleResize () {
                 this.$nextTick(() => {
                     const allWidth = !this.columns.some(cell => !cell.width);    // each column set a width
-                    if (allWidth) {
+                    if (allWidth && this.columns.length > 0) {
                         this.tableWidth = this.columns.map(cell => cell.width).reduce((a, b) => a + b);
                     } else {
                         this.tableWidth = parseInt(getStyle(this.$el, 'width')) - 1;
