@@ -61,14 +61,12 @@
         watch: {
             columns: {
                 handler: function () {
-                    console.log('column change')
                     this.$parent.content.$compile(this.$el);
                 },
                 deep: true
             },
             data: {
                 handler: function () {
-                    console.log('data change')
                     this.$parent.content.$compile(this.$el);
                 },
                 deep: true
