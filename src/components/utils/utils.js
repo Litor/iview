@@ -39,6 +39,14 @@ function merge(layout, config) {
         config.events.$root = {}
     }
 
+    if(config.options && config.options.$root){
+        Object.keys(config.options).forEach(function (option) {
+            if(option != '$root'){
+                config.options[option].$root = config.options.$root
+            }
+        })
+    }
+
     if (config.events && config.events.$root) {
         _bindPageEvents(this, config.events.$root)
     }
