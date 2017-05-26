@@ -26,9 +26,9 @@
                     </div>
                 </div>
                 <div :class="[prefixCls + '-inner']" v-if="!confirm">
-                    <div :class="[prefixCls + '-title']" v-if="showTitle" v-el:title><slot name="title"><div :class="[prefixCls + '-title-inner']">{{ title }}</div></slot></div>
+                    <div :class="[prefixCls + '-title']" v-if="showTitle" v-el:title><slot name="title"><div :class="[prefixCls + '-title-inner']">{{{ title }}}</div></slot></div>
                     <div :class="[prefixCls + '-body']">
-                        <div :class="[prefixCls + '-body-content']"><slot name="content"><div :class="[prefixCls + '-body-content-inner']">{{ content }}</div></slot></div>
+                        <div :class="[prefixCls + '-body-content']"><slot name="content"><div :class="[prefixCls + '-body-content-inner']">{{{ content }}}</div></slot></div>
                     </div>
                 </div>
             </div>
