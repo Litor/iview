@@ -3,11 +3,18 @@
     <div :class="wrapClasses" @click="handleWrapClick">
         <div :class="classes" :style="styles" v-show="visible" transition="ease">
             <div :class="[prefixCls + '-content']">
-                <a :class="[prefixCls + '-close']" v-if="closable" @click="close">
-                    <slot name="close">
-                        <Icon type="ios-close-empty"></Icon>
-                    </slot>
-                </a>
+                <template v-if="closeTpl">
+                    <a :class="[prefixCls + '-close']" v-el:close-tpl>
+                        {{{closeTpl}}}
+                    </a>
+                </template>
+                <template v-if="!closeTpl">
+                    <a :class="[prefixCls + '-close']" v-if="closable" @click="close">
+                        <slot name="close" >
+                            <Icon type="ios-close-empty"></Icon>
+                        </slot>
+                    </a>
+                </template>
                 <div :class="[prefixCls + '-header']" v-if="showHead" v-el:header>
                     <template v-if="header">
                         {{{header}}}
@@ -99,7 +106,8 @@
                 default: false
             },
             header: String,
-            footer: String
+            footer: String,
+            closeTpl:String
         },
         data () {
             return {
@@ -221,6 +229,13 @@
             }
             if(this.footer){
                 this.$children[0].$compile(this.$els.footer)
+            }
+            if(this.closeTpl){
+                this.$children[0].$compile(this.$els.closeTpl)
+            }
+
+            if (!this.scrollable) {
+                this.addScrollEffect();
             }
         },
         beforeDestroy () {

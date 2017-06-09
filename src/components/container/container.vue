@@ -8,6 +8,7 @@
                         :title="item.options.$title"
                         :header="item.options.$header"
                         :footer="item.options.$footer"
+                        :close-tpl="item.options.$close"
                         :loading="item.options.$loading"
                         :closable="item.options.$closable"
                         :width="item.options.$width"
