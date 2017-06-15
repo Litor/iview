@@ -9,7 +9,7 @@
                 :class="rowClasses(row._index)"
                 @mouseenter.stop="handleMouseIn(row._index)"
                 @mouseleave.stop="handleMouseOut(row._index)"
-                @click.stop="clickCurrentRow(row._index)"
+                @click="clickCurrentRow(row._index)"
                 @dblclick.stop="dblclickCurrentRow(row._index)">
             <td v-for="column in columns" :class="alignCls(column, row)">
                 <div :class="classes(column)">
