@@ -141,13 +141,13 @@
                     const index = this.navList.findIndex((nav) => nav.key === this.activeKey);
                     const prevTabs = this.$els.nav.querySelectorAll(`.${prefixCls}-tab`);
                     const tab = prevTabs[index];
-                    this.barWidth = parseFloat(getStyle(tab, 'width'));
+                    this.barWidth = tab.offsetWidth;
 
                     if (index > 0) {
                         let offset = 0;
                         const gutter = this.size === 'small' ? 0 : 16;
                         for (let i = 0; i < index; i++) {
-                            offset += parseFloat(getStyle(prevTabs[i], 'width')) + gutter;
+                            offset += prevTabs[i].offsetWidth + gutter;
                         }
 
                         this.barOffset = offset;
