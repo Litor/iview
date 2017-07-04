@@ -5,7 +5,7 @@ function __getComponent(comp, name) {
         if (res) {
             return false
         }
-        if (_.includes(item.$el.classList, 'comp-name-' + name)) {
+        if (_.includes(item.$el.className, 'comp-name-' + name)) {
             res = item
         } else {
             res = __getComponent(item, name)
