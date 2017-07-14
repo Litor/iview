@@ -22,8 +22,11 @@
                         <Radio :checked="objData[row._index] && objData[row._index]._isChecked" @click="singleSelect(row._index)"
                                :disabled="rowDisabled(row._index)"></Radio>
                     </template>
-                    <template v-if="renderType(column) === 'normal'">
-                        {{{ row[column.key] }}}
+                    <template v-if="renderType(column) === 'normal' && column.showMore">
+                        <span title="{{{ row[column.key] }}}">{{{ row[column.key] }}}</span>
+                    </template>
+                    <template v-if="renderType(column) === 'normal' && !column.showMore">
+                       {{{ row[column.key] }}}
                     </template>
                     <template v-if="renderType(column) === 'render'">
                         {{{column.render(row, column, row._index)}}}
