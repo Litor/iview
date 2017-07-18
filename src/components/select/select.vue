@@ -255,6 +255,8 @@
                     });
                     this.model = '';
 
+                    this.$emit('on-change', '')
+
                     if (this.filterable) {
                         this.query = '';
                     }
