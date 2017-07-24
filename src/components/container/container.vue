@@ -22,7 +22,9 @@
                         @on-cancel="__modalCancel(item.events && item.events['$on-cancel'], item.name)"
                         v-if="config.$modals[item.name]">
                     <component :is="item.component" :options="item.options" :events="item.events"
-                               class="{{item.name?('comp-name-'+item.name):''}}" v-if="config.$modals[item.name]"></component>
+                               class="{{item.name?('comp-name-'+item.name):''}}" v-if="config.$modals[item.name] && item.component"></component>
+                    <content-component :content="item.content" :options="item.options" :events="item.events"
+                               class="{{item.name?('comp-name-'+item.name):''}}" v-if="config.$modals[item.name] && item.content"></content-component>
                 </Modal>
             </div>
         </div>
@@ -37,11 +39,12 @@
     import iCol from '../layout/col.vue'
     import Modal from '../modal/modal.vue'
     import containerLayout from './containerLayout.vue'
+    import contentComponent from './contentComponent.vue'
 
     export default {
         props: {config: Object},
         $name:'$iContainer', // 用于页面中查找container组件
-        components: {Row, iCol, Modal, containerLayout, designer},
+        components: {Row, iCol, Modal, containerLayout, designer, contentComponent},
 
         methods: {
             __modalOk(callback, modalName){
