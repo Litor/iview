@@ -20,6 +20,7 @@ function getInstance(name) {
 
 function merge(layout, config) {
     layout = deepCopy(layout)
+    var names = getAllSectionName(layout)
 
     config.events = config.events ? config.events : {}
 
@@ -31,20 +32,22 @@ function merge(layout, config) {
         modals: layout.$modals
     };
 
+    if (config.options && config.options.$root) {
+        names.forEach(function (item) {
+            if (config.options[item]) {
+                config.options[item].$root = config.options.$root
+            } else {
+                config.options[item] = {$root: config.options.$root}
+            }
+        })
+    }
+
     if (layout.rows) {
         __mergeRows(layout.rows, config.options, config.events)
     }
 
     if (!config.events.$root) {
         config.events.$root = {}
-    }
-
-    if(config.options && config.options.$root){
-        Object.keys(config.options).forEach(function (option) {
-            if(option != '$root'){
-                config.options[option].$root = config.options.$root
-            }
-        })
     }
 
     if (config.events && config.events.$root) {
@@ -215,6 +218,52 @@ function __removeModalsOptionsAndEvents(modals) {
             delete modal.events
         }
     })
+}
+
+function getAllSectionName(config) {
+    var names = []
+    __getRowsSectionName(config.rows, names)
+
+    config.modals.forEach(function (modal) {
+        if (modal.name) {
+            names.push(modal.name)
+        }
+    })
+
+    return names
+}
+
+function __getRowsSectionName(rows, names) {
+    rows.forEach(function (row) {
+        if (!row.cols) {
+            return
+        }
+
+        row.cols.forEach(function (col) {
+            if (col.name) {
+                if (checkLayoutNameRepeat(names, col.name)) {
+                    console && console.error('layout.js中name重复，重复name名称：' + col.name)
+                }
+                names.push(col.name)
+            }
+
+            if (col.rows) {
+                __getRowsSection(col.rows, names)
+            }
+        })
+    })
+}
+
+
+function checkLayoutNameRepeat(names, name) {
+    var hasOne = false
+    names.forEach(function (item) {
+        if (item == name) {
+            hasOne = true
+        }
+    })
+
+    return hasOne
 }
 
 
