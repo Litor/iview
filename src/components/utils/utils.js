@@ -224,11 +224,13 @@ function getAllSectionName(config) {
     var names = []
     __getRowsSectionName(config.rows, names)
 
-    config.modals.forEach(function (modal) {
-        if (modal.name) {
-            names.push(modal.name)
-        }
-    })
+    if(config.modals){
+        config.modals.forEach(function (modal) {
+            if (modal.name) {
+                names.push(modal.name)
+            }
+        })
+    }
 
     return names
 }
