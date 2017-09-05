@@ -250,7 +250,7 @@ function __getRowsSectionName(rows, names) {
             }
 
             if (col.rows) {
-                __getRowsSection(col.rows, names)
+                __getRowsSectionName(col.rows, names)
             }
         })
     })
