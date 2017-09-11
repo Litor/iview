@@ -16,10 +16,24 @@ gulp.task('css', function () {
         .pipe(gulp.dest('../dist/styles'));
 });
 
+gulp.task('theme', function () {
+    ['green','blue','colorE','cyan-arctic','green-olive','lightBlue','purple','red-strawberry','yellow-fawn'].forEach(function (item) {
+        gulp.src('../src/theme/'+item+'/index.less')
+            .pipe(less())
+            .pipe(autoprefixer({
+                browsers: ['last 2 versions', 'ie > 8']
+            }))
+            .pipe(cleanCSS())
+            .pipe(rename('iview-'+item+'.css'))
+            .pipe(gulp.dest('../dist/styles'));
+    })
+
+});
+
 // 拷贝字体文件
 gulp.task('fonts', function () {
     gulp.src('../src/styles/common/iconfont/fonts/*.*')
         .pipe(gulp.dest('../dist/styles/fonts'));
 });
 
-gulp.task('default', ['css', 'fonts']);
+gulp.task('default', ['css', 'fonts', 'theme']);
