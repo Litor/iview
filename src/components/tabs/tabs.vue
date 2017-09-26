@@ -213,6 +213,9 @@
                 }
             }
         },
+        ready(){
+            this.updateBar();
+        },
         watch: {
             activeKey () {
                 this.updateBar();
