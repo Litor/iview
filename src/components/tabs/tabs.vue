@@ -214,7 +214,9 @@
             }
         },
         ready(){
-            this.updateBar();
+            setTimeout( () => {
+                this.updateBar();
+            }, 40)
         },
         watch: {
             activeKey () {
